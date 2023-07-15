@@ -11,11 +11,17 @@ const GRID_HEIGHT_IN_CELLS = 40;
 const GRID_LINE_WIDTH_IN_PIXELS = 1;
 const CELL_WIDTH_IN_PIXELS = CANVAS_WIDTH_IN_PIXELS / GRID_WIDTH_IN_CELLS;
 const CELL_HEIGHT_IN_PIXELS = CANVAS_HEIGHT_IN_PIXELS / GRID_HEIGHT_IN_CELLS;
+const TIME_INTERVAL_IN_SECONDS = 0.33;
+let intervalId;
 const CANVAS_ID = "canvas";
 const NEXT_BUTTON_ID = "button-next";
+const PLAY_BUTTON_ID = "button-play";
+const PAUSE_BUTTON_ID = "button-pause";
 const canvas = document.getElementById(CANVAS_ID);
 const context = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
 const nextStepButton = document.getElementById(NEXT_BUTTON_ID);
+const playButton = document.getElementById(PLAY_BUTTON_ID);
+const pauseButton = document.getElementById(PAUSE_BUTTON_ID);
 if (!canvas || !context) {
     throw new Error("Canvas API unsupported on this browser");
 }
@@ -108,9 +114,13 @@ const initialiseBoard = () => {
         nextBoard.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
     }
 };
+const initialiseButtons = () => {
+    nextStepButton.addEventListener("click", goToNextStep);
+    playButton.addEventListener("click", play);
+    pauseButton.addEventListener("click", pause);
+};
 const initialiseCanvas = () => {
     canvas.addEventListener("click", handleClick);
-    nextStepButton.addEventListener("click", goToNextStep);
     canvas.height = CANVAS_HEIGHT_IN_PIXELS;
     canvas.width = CANVAS_WIDTH_IN_PIXELS;
 };
@@ -141,8 +151,19 @@ const render = () => {
     }
     drawGridLines();
 };
+const play = () => {
+    goToNextStep();
+    progressTime();
+};
+const pause = () => {
+    clearInterval(intervalId);
+};
+const progressTime = () => {
+    intervalId = setInterval(goToNextStep, TIME_INTERVAL_IN_SECONDS * 1000);
+};
 const main = () => {
     initialiseCanvas();
+    initialiseButtons();
     initialiseBoard();
     render();
 };
