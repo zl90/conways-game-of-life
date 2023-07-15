@@ -4,6 +4,8 @@
   "description": "A simulation of Conways Game of Life I wrote for the purpose of learning the HTML Canvas API",
   "main": "index.js",
   "scripts": {
+    "build": "webpack --config webpack.config.js",
+    "watch": "webpack --watch",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -17,6 +19,8 @@
   },
   "homepage": "https://github.com/zl90/conways-game-of-life#readme",
   "devDependencies": {
-    "typescript": "^5.1.6"
+    "typescript": "^5.1.6",
+    "webpack": "^5.88.1",
+    "webpack-cli": "^5.1.4"
   }
 }
