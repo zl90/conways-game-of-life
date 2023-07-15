@@ -22,7 +22,7 @@ if (!canvas || !context) {
   throw new Error("Canvas API unsupported on this browser");
 }
 
-let board: Board = [];
+const board: Board = [];
 const nextBoard: Board = [];
 
 const getBoardPositionFromCanvasPosition = (
@@ -83,29 +83,36 @@ const getNumNeighbours = (row: number, col: number): number => {
 };
 
 const generateNextBoard = () => {
-  board.forEach((row, rowIndex) =>
-    row.forEach((col, colIndex) => {
-      const numNeighbours = getNumNeighbours(rowIndex, colIndex);
-      if (board[rowIndex][colIndex] === "alive") {
+  for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+    for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
+      const numNeighbours = getNumNeighbours(row, col);
+      if (board[row][col] === "alive") {
+        console.log(`board[${row}][${col}] has ${numNeighbours} neighbours`);
         if (numNeighbours <= 1 || numNeighbours >= 4) {
-          nextBoard[rowIndex][colIndex] = "dead";
+          nextBoard[row][col] = "dead";
         } else {
-          nextBoard[rowIndex][colIndex] = "alive";
+          nextBoard[row][col] = "alive";
         }
       } else {
         if (numNeighbours === 3) {
-          nextBoard[rowIndex][colIndex] = "alive";
+          nextBoard[row][col] = "alive";
         } else {
-          nextBoard[rowIndex][colIndex] = "dead";
+          nextBoard[row][col] = "dead";
         }
       }
-    })
-  );
+    }
+  }
 };
 
 const goToNextStep = () => {
   generateNextBoard();
-  board = nextBoard;
+
+  for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+    for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
+      board[row][col] = nextBoard[row][col];
+    }
+  }
+
   render();
 };
 
@@ -178,9 +185,11 @@ const drawCell = (row: number, col: number) => {
 };
 
 const render = () => {
-  board.forEach((row, rowIndex) =>
-    row.forEach((col, colIndex) => drawCell(rowIndex, colIndex))
-  );
+  for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+    for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
+      drawCell(row, col);
+    }
+  }
 
   drawGridLines();
 };
