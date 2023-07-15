@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const colors_1 = __importDefault(require("./colors"));
+const seed_1 = require("./seed");
 const CANVAS_WIDTH_IN_PIXELS = 600;
 const CANVAS_HEIGHT_IN_PIXELS = 600;
 const GRID_WIDTH_IN_CELLS = 40;
@@ -17,16 +18,20 @@ const CANVAS_ID = "canvas";
 const NEXT_BUTTON_ID = "button-next";
 const PLAY_BUTTON_ID = "button-play";
 const PAUSE_BUTTON_ID = "button-pause";
+const CLEAR_BUTTON_ID = "button-clear";
 const canvas = document.getElementById(CANVAS_ID);
 const context = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
 const nextStepButton = document.getElementById(NEXT_BUTTON_ID);
 const playButton = document.getElementById(PLAY_BUTTON_ID);
 const pauseButton = document.getElementById(PAUSE_BUTTON_ID);
+const clearButton = document.getElementById(CLEAR_BUTTON_ID);
 if (!canvas || !context) {
     throw new Error("Canvas API unsupported on this browser");
 }
 const board = [];
 const nextBoard = [];
+const isSeedValid = seed_1.initialBoard.length === GRID_HEIGHT_IN_CELLS &&
+    seed_1.initialBoard[0].length === GRID_WIDTH_IN_CELLS;
 const getBoardPositionFromCanvasPosition = (x, y) => {
     const row = Math.floor(y / CELL_HEIGHT_IN_PIXELS);
     const col = Math.floor(x / CELL_WIDTH_IN_PIXELS);
@@ -113,11 +118,20 @@ const initialiseBoard = () => {
         board.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
         nextBoard.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
     }
+    if (isSeedValid) {
+        for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+            for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
+                board[row][col] = seed_1.initialBoard[row][col];
+                nextBoard[row][col] = seed_1.initialBoard[row][col];
+            }
+        }
+    }
 };
 const initialiseButtons = () => {
     nextStepButton.addEventListener("click", goToNextStep);
     playButton.addEventListener("click", play);
     pauseButton.addEventListener("click", pause);
+    clearButton.addEventListener("click", clear);
 };
 const initialiseCanvas = () => {
     canvas.addEventListener("click", handleClick);
@@ -160,6 +174,16 @@ const pause = () => {
 };
 const progressTime = () => {
     intervalId = setInterval(goToNextStep, TIME_INTERVAL_IN_SECONDS * 1000);
+};
+const clear = () => {
+    for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+        for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
+            board[row][col] = "dead";
+            nextBoard[row][col] = "dead";
+        }
+    }
+    pause();
+    render();
 };
 const main = () => {
     initialiseCanvas();

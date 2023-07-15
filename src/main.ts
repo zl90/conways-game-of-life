@@ -1,5 +1,6 @@
 import Colors from "./colors";
-import { Board } from "./types";
+import { initialBoard } from "./seed";
+import { Board, CellState } from "./types";
 
 const CANVAS_WIDTH_IN_PIXELS = 600;
 const CANVAS_HEIGHT_IN_PIXELS = 600;
@@ -16,6 +17,7 @@ const CANVAS_ID = "canvas";
 const NEXT_BUTTON_ID = "button-next";
 const PLAY_BUTTON_ID = "button-play";
 const PAUSE_BUTTON_ID = "button-pause";
+const CLEAR_BUTTON_ID = "button-clear";
 
 const canvas = document.getElementById(CANVAS_ID) as HTMLCanvasElement;
 const context = canvas?.getContext("2d");
@@ -26,6 +28,9 @@ const playButton = document.getElementById(PLAY_BUTTON_ID) as HTMLButtonElement;
 const pauseButton = document.getElementById(
   PAUSE_BUTTON_ID
 ) as HTMLButtonElement;
+const clearButton = document.getElementById(
+  CLEAR_BUTTON_ID
+) as HTMLButtonElement;
 
 if (!canvas || !context) {
   throw new Error("Canvas API unsupported on this browser");
@@ -33,6 +38,10 @@ if (!canvas || !context) {
 
 const board: Board = [];
 const nextBoard: Board = [];
+
+const isSeedValid =
+  initialBoard.length === GRID_HEIGHT_IN_CELLS &&
+  initialBoard[0].length === GRID_WIDTH_IN_CELLS;
 
 const getBoardPositionFromCanvasPosition = (
   x: number,
@@ -142,12 +151,22 @@ const initialiseBoard = () => {
     board.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
     nextBoard.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
   }
+
+  if (isSeedValid) {
+    for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+      for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
+        board[row][col] = initialBoard[row][col] as CellState;
+        nextBoard[row][col] = initialBoard[row][col] as CellState;
+      }
+    }
+  }
 };
 
 const initialiseButtons = () => {
   nextStepButton.addEventListener("click", goToNextStep);
   playButton.addEventListener("click", play);
   pauseButton.addEventListener("click", pause);
+  clearButton.addEventListener("click", clear);
 };
 
 const initialiseCanvas = () => {
@@ -218,6 +237,17 @@ const pause = () => {
 
 const progressTime = () => {
   intervalId = setInterval(goToNextStep, TIME_INTERVAL_IN_SECONDS * 1000);
+};
+
+const clear = () => {
+  for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+    for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
+      board[row][col] = "dead";
+      nextBoard[row][col] = "dead";
+    }
+  }
+  pause();
+  render();
 };
 
 const main = () => {
