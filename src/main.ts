@@ -87,7 +87,6 @@ const generateNextBoard = () => {
     for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
       const numNeighbours = getNumNeighbours(row, col);
       if (board[row][col] === "alive") {
-        console.log(`board[${row}][${col}] has ${numNeighbours} neighbours`);
         if (numNeighbours <= 1 || numNeighbours >= 4) {
           nextBoard[row][col] = "dead";
         } else {
