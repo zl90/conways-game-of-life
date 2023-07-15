@@ -141,16 +141,18 @@ const nextStep = () => {
 };
 
 const handleClick = (e: MouseEvent) => {
-  const boardPosition = getBoardPositionFromCanvasPosition(
-    e.offsetX,
-    e.offsetY
-  );
-  if (board[boardPosition.row][boardPosition.col] === "alive") {
-    board[boardPosition.row][boardPosition.col] = "dead";
-  } else {
-    board[boardPosition.row][boardPosition.col] = "alive";
+  if (isPaused) {
+    const boardPosition = getBoardPositionFromCanvasPosition(
+      e.offsetX,
+      e.offsetY
+    );
+    if (board[boardPosition.row][boardPosition.col] === "alive") {
+      board[boardPosition.row][boardPosition.col] = "dead";
+    } else {
+      board[boardPosition.row][boardPosition.col] = "alive";
+    }
+    render();
   }
-  render();
 };
 
 const initialiseBoard = () => {

@@ -110,14 +110,16 @@ const nextStep = () => {
     }
 };
 const handleClick = (e) => {
-    const boardPosition = getBoardPositionFromCanvasPosition(e.offsetX, e.offsetY);
-    if (board[boardPosition.row][boardPosition.col] === "alive") {
-        board[boardPosition.row][boardPosition.col] = "dead";
+    if (isPaused) {
+        const boardPosition = getBoardPositionFromCanvasPosition(e.offsetX, e.offsetY);
+        if (board[boardPosition.row][boardPosition.col] === "alive") {
+            board[boardPosition.row][boardPosition.col] = "dead";
+        }
+        else {
+            board[boardPosition.row][boardPosition.col] = "alive";
+        }
+        render();
     }
-    else {
-        board[boardPosition.row][boardPosition.col] = "alive";
-    }
-    render();
 };
 const initialiseBoard = () => {
     for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
