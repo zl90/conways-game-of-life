@@ -6,3 +6,4 @@ const Colors = {
     CELL_DEAD: "#212730",
 };
 exports.default = Colors;
+//# sourceMappingURL=colors.js.map

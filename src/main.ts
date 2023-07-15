@@ -10,15 +10,20 @@ const CELL_WIDTH_IN_PIXELS = CANVAS_WIDTH_IN_PIXELS / GRID_WIDTH_IN_CELLS;
 const CELL_HEIGHT_IN_PIXELS = CANVAS_HEIGHT_IN_PIXELS / GRID_HEIGHT_IN_CELLS;
 
 const CANVAS_ID = "canvas";
+const NEXT_BUTTON_ID = "button-next";
 
 const canvas = document.getElementById(CANVAS_ID) as HTMLCanvasElement;
 const context = canvas?.getContext("2d");
+const nextStepButton = document.getElementById(
+  NEXT_BUTTON_ID
+) as HTMLButtonElement;
 
 if (!canvas || !context) {
   throw new Error("Canvas API unsupported on this browser");
 }
 
-const board: Board = [];
+let board: Board = [];
+const nextBoard: Board = [];
 
 const getBoardPositionFromCanvasPosition = (
   x: number,
@@ -62,7 +67,13 @@ const getNumNeighbours = (row: number, col: number): number => {
 
   convolution.forEach((convRow) =>
     convRow.forEach((convItem) => {
-      if (board[convItem.row][convItem.col] === "alive") {
+      if (
+        convItem.row >= 0 &&
+        convItem.row < GRID_HEIGHT_IN_CELLS &&
+        convItem.col >= 0 &&
+        convItem.col < GRID_WIDTH_IN_CELLS &&
+        board[convItem.row][convItem.col] === "alive"
+      ) {
         numNeighbours++;
       }
     })
@@ -71,10 +82,31 @@ const getNumNeighbours = (row: number, col: number): number => {
   return numNeighbours;
 };
 
-const initialiseBoard = () => {
-  for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
-    board.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
-  }
+const generateNextBoard = () => {
+  board.forEach((row, rowIndex) =>
+    row.forEach((col, colIndex) => {
+      const numNeighbours = getNumNeighbours(rowIndex, colIndex);
+      if (board[rowIndex][colIndex] === "alive") {
+        if (numNeighbours <= 1 || numNeighbours >= 4) {
+          nextBoard[rowIndex][colIndex] = "dead";
+        } else {
+          nextBoard[rowIndex][colIndex] = "alive";
+        }
+      } else {
+        if (numNeighbours === 3) {
+          nextBoard[rowIndex][colIndex] = "alive";
+        } else {
+          nextBoard[rowIndex][colIndex] = "dead";
+        }
+      }
+    })
+  );
+};
+
+const goToNextStep = () => {
+  generateNextBoard();
+  board = nextBoard;
+  render();
 };
 
 const handleClick = (e: MouseEvent) => {
@@ -90,8 +122,16 @@ const handleClick = (e: MouseEvent) => {
   render();
 };
 
+const initialiseBoard = () => {
+  for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+    board.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
+    nextBoard.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
+  }
+};
+
 const initialiseCanvas = () => {
   canvas.addEventListener("click", handleClick);
+  nextStepButton.addEventListener("click", goToNextStep);
 
   canvas.height = CANVAS_HEIGHT_IN_PIXELS;
   canvas.width = CANVAS_WIDTH_IN_PIXELS;
@@ -138,11 +178,9 @@ const drawCell = (row: number, col: number) => {
 };
 
 const render = () => {
-  for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
-    for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
-      drawCell(row, col);
-    }
-  }
+  board.forEach((row, rowIndex) =>
+    row.forEach((col, colIndex) => drawCell(rowIndex, colIndex))
+  );
 
   drawGridLines();
 };

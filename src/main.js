@@ -12,12 +12,15 @@ const GRID_LINE_WIDTH_IN_PIXELS = 1;
 const CELL_WIDTH_IN_PIXELS = CANVAS_WIDTH_IN_PIXELS / GRID_WIDTH_IN_CELLS;
 const CELL_HEIGHT_IN_PIXELS = CANVAS_HEIGHT_IN_PIXELS / GRID_HEIGHT_IN_CELLS;
 const CANVAS_ID = "canvas";
+const NEXT_BUTTON_ID = "button-next";
 const canvas = document.getElementById(CANVAS_ID);
 const context = canvas === null || canvas === void 0 ? void 0 : canvas.getContext("2d");
+const nextStepButton = document.getElementById(NEXT_BUTTON_ID);
 if (!canvas || !context) {
     throw new Error("Canvas API unsupported on this browser");
 }
-const board = [];
+let board = [];
+const nextBoard = [];
 const getBoardPositionFromCanvasPosition = (x, y) => {
     const row = Math.floor(y / CELL_HEIGHT_IN_PIXELS);
     const col = Math.floor(x / CELL_WIDTH_IN_PIXELS);
@@ -47,16 +50,41 @@ const getNumNeighbours = (row, col) => {
     ];
     let numNeighbours = 0;
     convolution.forEach((convRow) => convRow.forEach((convItem) => {
-        if (board[convItem.row][convItem.col] === "alive") {
+        if (convItem.row >= 0 &&
+            convItem.row < GRID_HEIGHT_IN_CELLS &&
+            convItem.col >= 0 &&
+            convItem.col < GRID_WIDTH_IN_CELLS &&
+            board[convItem.row][convItem.col] === "alive") {
             numNeighbours++;
         }
     }));
     return numNeighbours;
 };
-const initialiseBoard = () => {
-    for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
-        board.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
-    }
+const generateNextBoard = () => {
+    board.forEach((row, rowIndex) => row.forEach((col, colIndex) => {
+        const numNeighbours = getNumNeighbours(rowIndex, colIndex);
+        if (board[rowIndex][colIndex] === "alive") {
+            if (numNeighbours <= 1 || numNeighbours >= 4) {
+                nextBoard[rowIndex][colIndex] = "dead";
+            }
+            else {
+                nextBoard[rowIndex][colIndex] = "alive";
+            }
+        }
+        else {
+            if (numNeighbours === 3) {
+                nextBoard[rowIndex][colIndex] = "alive";
+            }
+            else {
+                nextBoard[rowIndex][colIndex] = "dead";
+            }
+        }
+    }));
+};
+const goToNextStep = () => {
+    generateNextBoard();
+    board = nextBoard;
+    render();
 };
 const handleClick = (e) => {
     const boardPosition = getBoardPositionFromCanvasPosition(e.offsetX, e.offsetY);
@@ -68,8 +96,15 @@ const handleClick = (e) => {
     }
     render();
 };
+const initialiseBoard = () => {
+    for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
+        board.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
+        nextBoard.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
+    }
+};
 const initialiseCanvas = () => {
     canvas.addEventListener("click", handleClick);
+    nextStepButton.addEventListener("click", goToNextStep);
     canvas.height = CANVAS_HEIGHT_IN_PIXELS;
     canvas.width = CANVAS_WIDTH_IN_PIXELS;
 };
@@ -93,11 +128,7 @@ const drawCell = (row, col) => {
     context.fillRect(canvasPosition.x, canvasPosition.y, CELL_WIDTH_IN_PIXELS, CELL_HEIGHT_IN_PIXELS);
 };
 const render = () => {
-    for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
-        for (let col = 0; col < GRID_WIDTH_IN_CELLS; col++) {
-            drawCell(row, col);
-        }
-    }
+    board.forEach((row, rowIndex) => row.forEach((col, colIndex) => drawCell(rowIndex, colIndex)));
     drawGridLines();
 };
 const main = () => {
@@ -106,3 +137,4 @@ const main = () => {
     render();
 };
 exports.default = main;
+//# sourceMappingURL=main.js.map
