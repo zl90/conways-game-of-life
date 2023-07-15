@@ -1,0 +1,22 @@
+{
+  "name": "conways-game-of-life",
+  "version": "1.0.0",
+  "description": "A simulation of Conways Game of Life I wrote for the purpose of learning the HTML Canvas API",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zl90/conways-game-of-life.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zl90/conways-game-of-life/issues"
+  },
+  "homepage": "https://github.com/zl90/conways-game-of-life#readme",
+  "devDependencies": {
+    "typescript": "^5.1.6"
+  }
+}
