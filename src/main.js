@@ -14,6 +14,7 @@ const CELL_WIDTH_IN_PIXELS = CANVAS_WIDTH_IN_PIXELS / GRID_WIDTH_IN_CELLS;
 const CELL_HEIGHT_IN_PIXELS = CANVAS_HEIGHT_IN_PIXELS / GRID_HEIGHT_IN_CELLS;
 const TIME_INTERVAL_IN_SECONDS = 0.33;
 let intervalId;
+let isPaused = true;
 const CANVAS_ID = "canvas";
 const NEXT_BUTTON_ID = "button-next";
 const PLAY_BUTTON_ID = "button-play";
@@ -103,6 +104,11 @@ const goToNextStep = () => {
     }
     render();
 };
+const nextStep = () => {
+    if (isPaused) {
+        goToNextStep();
+    }
+};
 const handleClick = (e) => {
     const boardPosition = getBoardPositionFromCanvasPosition(e.offsetX, e.offsetY);
     if (board[boardPosition.row][boardPosition.col] === "alive") {
@@ -128,7 +134,7 @@ const initialiseBoard = () => {
     }
 };
 const initialiseButtons = () => {
-    nextStepButton.addEventListener("click", goToNextStep);
+    nextStepButton.addEventListener("click", nextStep);
     playButton.addEventListener("click", play);
     pauseButton.addEventListener("click", pause);
     clearButton.addEventListener("click", clear);
@@ -166,14 +172,20 @@ const render = () => {
     drawGridLines();
 };
 const play = () => {
-    goToNextStep();
-    progressTime();
+    if (isPaused) {
+        isPaused = false;
+        goToNextStep();
+        progressTime();
+    }
 };
 const pause = () => {
+    isPaused = true;
     clearInterval(intervalId);
 };
 const progressTime = () => {
-    intervalId = setInterval(goToNextStep, TIME_INTERVAL_IN_SECONDS * 1000);
+    if (!isPaused) {
+        intervalId = setInterval(goToNextStep, TIME_INTERVAL_IN_SECONDS * 1000);
+    }
 };
 const clear = () => {
     for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {

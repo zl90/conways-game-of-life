@@ -12,6 +12,7 @@ const CELL_HEIGHT_IN_PIXELS = CANVAS_HEIGHT_IN_PIXELS / GRID_HEIGHT_IN_CELLS;
 
 const TIME_INTERVAL_IN_SECONDS = 0.33;
 let intervalId: NodeJS.Timer;
+let isPaused = true;
 
 const CANVAS_ID = "canvas";
 const NEXT_BUTTON_ID = "button-next";
@@ -133,6 +134,12 @@ const goToNextStep = () => {
   render();
 };
 
+const nextStep = () => {
+  if (isPaused) {
+    goToNextStep();
+  }
+};
+
 const handleClick = (e: MouseEvent) => {
   const boardPosition = getBoardPositionFromCanvasPosition(
     e.offsetX,
@@ -163,7 +170,7 @@ const initialiseBoard = () => {
 };
 
 const initialiseButtons = () => {
-  nextStepButton.addEventListener("click", goToNextStep);
+  nextStepButton.addEventListener("click", nextStep);
   playButton.addEventListener("click", play);
   pauseButton.addEventListener("click", pause);
   clearButton.addEventListener("click", clear);
@@ -227,16 +234,22 @@ const render = () => {
 };
 
 const play = () => {
-  goToNextStep();
-  progressTime();
+  if (isPaused) {
+    isPaused = false;
+    goToNextStep();
+    progressTime();
+  }
 };
 
 const pause = () => {
+  isPaused = true;
   clearInterval(intervalId);
 };
 
 const progressTime = () => {
-  intervalId = setInterval(goToNextStep, TIME_INTERVAL_IN_SECONDS * 1000);
+  if (!isPaused) {
+    intervalId = setInterval(goToNextStep, TIME_INTERVAL_IN_SECONDS * 1000);
+  }
 };
 
 const clear = () => {
