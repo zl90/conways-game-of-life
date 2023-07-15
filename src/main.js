@@ -28,6 +28,31 @@ const getCanvasPositionFromBoardPosition = (row, col) => {
     const y = row * CELL_HEIGHT_IN_PIXELS;
     return { x, y };
 };
+const getNumNeighbours = (row, col) => {
+    const convolution = [
+        [
+            { row: row - 1, col: col - 1 },
+            { row: row - 1, col: col },
+            { row: row - 1, col: col + 1 },
+        ],
+        [
+            { row: row, col: col - 1 },
+            { row: row, col: col + 1 },
+        ],
+        [
+            { row: row + 1, col: col - 1 },
+            { row: row + 1, col: col },
+            { row: row + 1, col: col + 1 },
+        ],
+    ];
+    let numNeighbours = 0;
+    convolution.forEach((convRow) => convRow.forEach((convItem) => {
+        if (board[convItem.row][convItem.col] === "alive") {
+            numNeighbours++;
+        }
+    }));
+    return numNeighbours;
+};
 const initialiseBoard = () => {
     for (let row = 0; row < GRID_HEIGHT_IN_CELLS; row++) {
         board.push(Array(GRID_WIDTH_IN_CELLS).fill("dead"));
