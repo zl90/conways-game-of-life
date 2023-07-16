@@ -1,6 +1,14 @@
 # conways-game-of-life
 
-A simulation of Conways Game of Life I wrote for the purpose of learning the HTML Canvas API
+A simulation of Conways Game of Life I wrote for the purpose of learning the HTML Canvas API.
+
+[Screenshots coming soon]
+
+### Explanation
+
+The Game of Life is not your typical computer game. It is a cellular automaton, and was invented by Cambridge mathematician John Conway.
+
+This game became widely known when it was mentioned in an article published by Scientific American in 1970. It consists of a grid of cells which, based on a few mathematical rules, can live, die or multiply. Depending on the initial conditions, the cells form various patterns throughout the course of the game.
 
 ### Simple rules
 
@@ -16,7 +24,7 @@ For a space that is empty or unpopulated:
 
     Each cell with three neighbors becomes populated.
 
-### Note to self
+### Reflections
 
-- `draw()` function will be used to actually render the context
-- it is possible to delay/set a timer for the `draw()` function
+- This project was a great way to refresh my knowledge of setting up a basic webpack project, something I don't do often at my job.
+- Learning the HTML Canvas API was easy and thoroughly enjoyable, I'll definitely be doing more projects with it in the future.
