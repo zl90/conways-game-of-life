@@ -1,8 +1,10 @@
-# conways-game-of-life
+# [Conway's Game Of Life](https://zl90.github.io/conways-game-of-life/)
 
 A simulation of Conways Game of Life I wrote for the purpose of learning the HTML Canvas API.
 
-[Screenshots coming soon]
+## [Live Demo - Click Here](https://zl90.github.io/conways-game-of-life/)
+
+![Screenshot](https://zl90.github.io/conways-game-of-life/dist/public/screenshot.png)
 
 ### Explanation
 
