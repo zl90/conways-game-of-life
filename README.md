@@ -28,5 +28,6 @@ For a space that is empty or unpopulated:
 
 ### Reflections
 
-- This project was a great way to refresh my knowledge of setting up a basic webpack project, something I don't do often at my job.
+- This project was a great way to refresh my knowledge of setting up a basic webpack project, something I don't do at my job, as I normally work with a custom-built propietary framework.
 - Learning the HTML Canvas API was easy and thoroughly enjoyable, I'll definitely be doing more projects with it in the future.
+- To calculate each successive cellular generation, I had to apply a **convolution** to the current grid, which is something I'd never used before. I found a [very good video](https://www.youtube.com/watch?v=KuXjwB4LzSA&pp=ygUVd2hhdCBhcmUgY29udm9sdXRpb25z) explaining convolutions. Turns out similar techniques are used in image processing (for example: applying Gaussian blur effects). Fascinating stuff!
