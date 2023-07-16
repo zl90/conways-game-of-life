@@ -6,8 +6,10 @@
   "scripts": {
     "build": "webpack --config webpack.config.js",
     "watch": "webpack --watch --mode=development",
-    "typescript-watch" : "./node_modules/.bin/tsc --watch",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "typescript-watch": "./node_modules/.bin/tsc --watch",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d dist"
   },
   "repository": {
     "type": "git",
@@ -20,6 +22,7 @@
   },
   "homepage": "https://github.com/zl90/conways-game-of-life#readme",
   "devDependencies": {
+    "gh-pages": "^5.0.0",
     "typescript": "^5.1.6",
     "webpack": "^5.88.1",
     "webpack-cli": "^5.1.4"
